@@ -92,7 +92,7 @@ Suit(defaultdict(<class 'list'>, {'foo': [0]}))
 defaultdict(<class 'list'>, {'foo': [0]})
 >>>
 ```
-`suit` acts like object it wraps with exception of missed attribute access, which converts to item access and pair of suit-state attributes:
+`suit` acts like object it wraps with exception of missed attributes access (which converts to item access) and pair of suit-state attributes:
 * `value`: original object, which current instance of `Suit` holds.
 * `_suit_config`: `Suit` state for `allowed`, `forbidden` and `parents` info.
 
