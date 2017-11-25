@@ -1,0 +1,17 @@
+language: python
+python:
+    - 3.4
+    - 3.5
+    - 3.6
+    - pypy3.5-5.8.0
+install:
+    - travis_retry pip install pytest pytest-cov flake8 coveralls
+before_script:
+    - flake8 --max-line-length=120 suit.py
+script:
+    - pytest
+branches:
+    only:
+        - master
+after_success:
+    coveralls
