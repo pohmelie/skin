@@ -120,3 +120,12 @@ As you can see there is no "foo" or "bar" items. But in case of setting:
 Suit({'foo': {'bar': 'baz'}})
 >>>
 ```
+Since suit is just wrapper, which do not recreate container you can use any object with `__getitem__`:
+``` python
+>>> import collections
+>>> s = Suit(collections.defaultdict(list))
+>>> s.foo.append(1)
+>>> s
+Suit(defaultdict(<class 'list'>, {'foo': [1]}))
+>>>
+```
