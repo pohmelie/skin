@@ -1,6 +1,9 @@
 # Suit
 Getitem-objects «suit» for attribute-like access.
 
+[![travis](https://img.shields.io/travis/pohmelie/suit.svg)](https://travis-ci.org/pohmelie/suit)
+[![coveralls](https://img.shields.io/coveralls/pohmelie/suit.svg)](https://coveralls.io/github/pohmelie/suit)
+
 ## Reason
 [addict](https://github.com/mewwts/addict) and [python-box](https://github.com/cdgriffith/Box) do not respect `dict` reference transparency.
 ### addict
