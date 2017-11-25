@@ -22,11 +22,11 @@ class Suit:
         if value is DEFAULT_VALUE:
             value = {}
         if not hasattr(value, "__getitem__"):
-            raise SuitValueError(f"{value!r} have no '__getitem__' method")
+            raise SuitValueError("{!r} have no '__getitem__' method".format(value))
         if allowed is not ANY and not isinstance(value, allowed):
-            raise SuitValueError(f"{value!r} not in allowed")
+            raise SuitValueError("{!r} not in allowed".format(value))
         if forbidden is ANY or isinstance(value, forbidden):
-            raise SuitValueError(f"{value!r} in forbidden")
+            raise SuitValueError("{!r} in forbidden".format(value))
         if isinstance(value, self.__class__):
             value = value.value
         super().__setattr__("value", value)
@@ -70,7 +70,7 @@ class Suit:
         del self.value[name]
 
     def __repr__(self):
-        return f"{self.__class__.__name__}({self.value!r})"
+        return "{}({!r})".format(self.__class__.__name__, self.value)
 
     def __len__(self):
         return len(self.value)
