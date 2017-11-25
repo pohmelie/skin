@@ -17,8 +17,7 @@ DEFAULT_VALUE = object()
 
 class Suit:
 
-    def __init__(self, value=DEFAULT_VALUE, *, allowed=ANY,
-                 forbidden=FORBIDDEN, parent=None):
+    def __init__(self, value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN, parent=None):
         if value is DEFAULT_VALUE:
             value = {}
         if not hasattr(value, "__getitem__"):
