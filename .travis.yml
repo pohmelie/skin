@@ -7,7 +7,7 @@ python:
 install:
     - travis_retry pip install pytest pytest-cov flake8 coveralls
 before_script:
-    - flake8 --max-line-length=120 suit.py
+    - flake8 --max-line-length=120 skin.py
 script:
     - pytest
 branches:

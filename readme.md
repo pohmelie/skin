@@ -1,8 +1,8 @@
-[![travis](https://img.shields.io/travis/pohmelie/suit.svg)](https://travis-ci.org/pohmelie/suit)
-[![coveralls](https://img.shields.io/coveralls/pohmelie/suit.svg)](https://coveralls.io/github/pohmelie/suit)
+[![travis](https://img.shields.io/travis/pohmelie/skin.svg)](https://travis-ci.org/pohmelie/skin)
+[![coveralls](https://img.shields.io/coveralls/pohmelie/skin.svg)](https://coveralls.io/github/pohmelie/skin)
 
-# Suit
-Getitem-objects «suit» for attribute-like access.
+# Skin
+Getitem-objects «skin» for attribute-like access.
 
 ## Reason
 [addict](https://github.com/mewwts/addict) and [python-box](https://github.com/cdgriffith/Box) do not respect `dict` reference transparency.
@@ -38,15 +38,15 @@ Getitem-objects «suit» for attribute-like access.
 <BoxList: [1, 2, 3, 4]>
 >>>
 ```
-### suit
+### skin
 ``` python
->>> from suit import Suit
+>>> from skin import Skin
 >>> original = {"foo": [1, 2, 3]}
->>> s = Suit(original)
+>>> s = Skin(original)
 >>> s.foo
-Suit([1, 2, 3])
+Skin([1, 2, 3])
 >>> type(s.foo)
-<class 'suit.Suit'>
+<class 'skin.Skin'>
 >>> type(s.foo.value)
 <class 'list'>
 >>> s.foo.value is original["foo"]
@@ -58,43 +58,43 @@ True
 ```
 # Documentation
 ``` python
-Suit(value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN)
+Skin(value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN)
 ```
 * value — any object with `__getitem__` method (default: `dict`).
-* allowed — tuple of allowed types to wrap or `suit.ANY` for all types allowed (default: `suit.ANY`)
+* allowed — tuple of allowed types to wrap or `skin.ANY` for all types allowed (default: `skin.ANY`)
 * forbidden — tuple of forbidden types to wrap (default: `(str, bytes, bytearray, memoryview, range)`)
 
 What is `allowed` and `forbidden`?
 
-Since suit target is not to recreate containers there should be a rule to determine is object container or endpoint-node. Some objects (listed above as `forbidden`) have `__getitem__` method, but wont act like containers.
+Since skin target is not to recreate containers there should be a rule to determine is object container or endpoint-node. Some objects (listed above as `forbidden`) have `__getitem__` method, but wont act like containers.
 
 Example:
-You have original dictionary `{"foo": "bar"}`, and you expect from suit that `Suit({"foo": "bar"}).foo` is `"bar"` string, not suit wrapper. But, `str`, `bytes`, etc. have `__getitiem__` method. That is why there is `allowed` and `forbidden` tuples. I hope defaults are enough for 99% usecases.
-In general: if `value` have no `__getitem__` or not allowed or forbidden you will get `SuitValueError` exception, which suit catches to determine if object can be wrapped.
+You have original dictionary `{"foo": "bar"}`, and you expect from skin that `Skin({"foo": "bar"}).foo` is `"bar"` string, not skin wrapper. But, `str`, `bytes`, etc. have `__getitiem__` method. That is why there is `allowed` and `forbidden` tuples. I hope defaults are enough for 99% usecases.
+In general: if `value` have no `__getitem__` or not allowed or forbidden you will get `SkinValueError` exception, which skin catches to determine if object can be wrapped.
 
-Suit class have two hardcoded attributes:
-* `value` — original object, which suit wraps
-* `_suit_config` — some suit internals
+Skin class have two hardcoded attributes:
+* `value` — original object, which skin wraps
+* `_skin_config` — some skin internals
 
-Suit supports both "item" and "attribute" notations:
+Skin supports both "item" and "attribute" notations:
 ``` python
->>> s = Suit({"foo": "bar"})
+>>> s = Skin({"foo": "bar"})
 >>> s.foo is s["foo"]
 True
 >>>
 ```
 But, in case of nested containers:
 ``` python
->>> s = Suit({"foo": {"bar": "baz"}})
+>>> s = Skin({"foo": {"bar": "baz"}})
 >>> s.foo is s["foo"]
 False
 >>> s.foo.value is s["foo"].value
 True
 >>>
 ```
-Suit use strict order to find "items":
+Skin use strict order to find "items":
 * in case of attribute access:
-    * suit attribute
+    * skin attribute
     * value attribute
     * value item
     * orphan item
@@ -104,28 +104,28 @@ Suit use strict order to find "items":
 
 Orphan item is just naming for item, which is not yet set. Example:
 ``` python
->>> s = Suit()
+>>> s = Skin()
 >>> s.foo.bar
-Suit({})
+Skin({})
 >>> s
-Suit({})
+Skin({})
 >>>
 ```
 
 As you can see there is no "foo" or "bar" items. But in case of setting:
 ``` python
->>> s = Suit()
+>>> s = Skin()
 >>> s.foo.bar = "baz"
 >>> s
-Suit({'foo': {'bar': 'baz'}})
+Skin({'foo': {'bar': 'baz'}})
 >>>
 ```
-Since suit is just wrapper, which do not recreate container you can use any object with `__getitem__`:
+Since skin is just wrapper, which do not recreate container you can use any object with `__getitem__`:
 ``` python
 >>> import collections
->>> s = Suit(collections.defaultdict(list))
+>>> s = Skin(collections.defaultdict(list))
 >>> s.foo.append(1)
 >>> s
-Suit(defaultdict(<class 'list'>, {'foo': [1]}))
+Skin(defaultdict(<class 'list'>, {'foo': [1]}))
 >>>
 ```

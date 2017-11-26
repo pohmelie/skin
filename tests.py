@@ -3,7 +3,7 @@ import copy
 
 import pytest
 
-from suit import Suit, SuitValueError
+from skin import Skin, SkinValueError
 
 
 @pytest.fixture(scope="function")
@@ -13,7 +13,7 @@ def d():
 
 @pytest.fixture(scope="function")
 def s(d):
-    return Suit(d)
+    return Skin(d)
 
 
 def test_get_known(d, s):
@@ -31,9 +31,9 @@ def test_get_known(d, s):
 
 
 def test_get_unknown(d, s):
-    assert isinstance(s.foo, Suit)
-    assert isinstance(s.foo.bar, Suit)
-    assert isinstance(s.foo.bar[0].baz, Suit)
+    assert isinstance(s.foo, Skin)
+    assert isinstance(s.foo.bar, Skin)
+    assert isinstance(s.foo.bar[0].baz, Skin)
     assert "foo" not in d
     assert "foo" not in s
     assert s.foo is not s.foo
@@ -53,23 +53,23 @@ def test_set_unknown(d, s):
 
 
 def test_no_getitem():
-    with pytest.raises(SuitValueError):
-        Suit(1)
+    with pytest.raises(SkinValueError):
+        Skin(1)
 
 
 def test_not_allowed():
-    with pytest.raises(SuitValueError):
-        Suit(dict(), allowed=(str,))
+    with pytest.raises(SkinValueError):
+        Skin(dict(), allowed=(str,))
 
 
 def test_forbidden():
-    with pytest.raises(SuitValueError):
-        Suit(dict(), forbidden=(dict,))
+    with pytest.raises(SkinValueError):
+        Skin(dict(), forbidden=(dict,))
 
 
-def test_suit_of_suit():
-    s1 = Suit(dict(a=1))
-    s2 = Suit(s1)
+def test_skin_of_skin():
+    s1 = Skin(dict(a=1))
+    s2 = Skin(s1)
     assert s1.a is s2.a
     assert s1.a == s2.a == 1
 
@@ -99,7 +99,7 @@ def test_set_known_attribute():
             raise NotImplementedError
 
     a = A()
-    s = Suit(a)
+    s = Skin(a)
     assert a.x is s.x
     s.x = 2
     assert a.x is s.x
@@ -116,7 +116,7 @@ def test_del_known_attribute():
             raise NotImplementedError
 
     a = A()
-    s = Suit(a)
+    s = Skin(a)
     assert a.x is s.x
     del s.x
     with pytest.raises(AttributeError):
@@ -127,14 +127,14 @@ def test_del_known_value(d, s):
     del s.c
     with pytest.raises(KeyError):
         d["c"]
-    assert isinstance(s.c, Suit)
+    assert isinstance(s.c, Skin)
     with pytest.raises(KeyError):
         d["c"]
 
 
 def test_repr():
-    s = Suit()
-    assert repr(s) == "Suit({})"
+    s = Skin()
+    assert repr(s) == "Skin({})"
 
 
 def test_reversed(d, s):
@@ -144,7 +144,7 @@ def test_reversed(d, s):
 
 def test_defaultdict():
     d = collections.defaultdict(list)
-    s = Suit(d)
+    s = Skin(d)
     assert isinstance(s.foo.value, list)
     assert len(s) == 1
     s.bar.append(1)
@@ -154,9 +154,9 @@ def test_defaultdict():
 
 
 def test_foo_copy():
-    s = Suit()
+    s = Skin()
     s.foo = []
-    t = Suit(s.copy())
+    t = Skin(s.copy())
     u = copy.copy(s)
     assert s is not t
     assert s is not u
@@ -165,7 +165,7 @@ def test_foo_copy():
 
 
 def test_deepcopy():
-    s = Suit()
+    s = Skin()
     s.foo = []
     t = copy.deepcopy(s)
     assert s.foo.value is not t.foo.value
