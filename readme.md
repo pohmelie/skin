@@ -1,5 +1,6 @@
 [![travis](https://img.shields.io/travis/pohmelie/skin.svg)](https://travis-ci.org/pohmelie/skin)
 [![coveralls](https://img.shields.io/coveralls/pohmelie/skin.svg)](https://coveralls.io/github/pohmelie/skin)
+[![pypi](https://img.shields.io/pypi/v/skin.svg)](https://pypi.python.org/pypi/skin)
 
 # Skin
 Getitem-objects «skin» for attribute-like access.
