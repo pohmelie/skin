@@ -29,8 +29,7 @@ class Skin:
         if isinstance(value, self.__class__):
             value = value.value
         super().__setattr__("value", value)
-        config = dict(parent=parent, allowed=allowed, forbidden=forbidden)
-        super().__setattr__("_skin_config", config)
+        super().__setattr__("_skin_config", dict(parent=parent, allowed=allowed, forbidden=forbidden))
 
     def __getattr__(self, name):
         if hasattr(self.value, name):
