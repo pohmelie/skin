@@ -130,3 +130,20 @@ Since skin is just wrapper, which do not recreate container you can use any obje
 Skin(defaultdict(<class 'list'>, {'foo': [1]}))
 >>>
 ```
+
+# Benchmark
+``` text
+Create instance:
+        [Box]:   7.018369233002886
+        [Dict]:  7.909402168937959
+        [Skin]:  1.3114022030495107
+Access exist:
+        [dict]:  0.05416807997971773
+        [Box]:   3.105333382030949
+        [Dict]:  2.140042087994516
+        [Skin]:  7.946239187032916
+Access non-exist:
+        [Dict]   2.7948554309550673
+        [Skin]   5.142325107008219
+```
+`Skin` do not wrap object recursively, so it have constant creation time. In case of access `Skin` create wrappers every time, so it is 2-4x times slower, than `Dict` and `Box`.
