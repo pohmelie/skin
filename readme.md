@@ -6,7 +6,7 @@
 Getitem-objects «skin» for attribute-like access.
 
 ## Reason
-[addict](https://github.com/mewwts/addict) and [python-box](https://github.com/cdgriffith/Box) do not respect `dict` reference transparency.
+[addict](https://github.com/mewwts/addict), [python-box](https://github.com/cdgriffith/Box) and [tri.struct](https://github.com/TriOptima/tri.struct) do not respect `dict` reference transparency.
 ### addict
 ``` python
 >>> from addict import Dict
@@ -37,6 +37,23 @@ Getitem-objects «skin» for attribute-like access.
 {'foo': [1, 2, 3]}
 >>> b.foo
 <BoxList: [1, 2, 3, 4]>
+>>>
+```
+### tri.struct
+``` python
+>>> from tri.struct import Struct
+>>> o = {"foo": [1, 2, {"bar": "baz"}]}
+>>> s = Struct(o)
+>>> s.foo[-1].bar
+Traceback (most recent call last):
+File "<input>", line 1, in <module>
+    s.foo[-1].bar
+AttributeError: 'dict' object has no attribute 'bar'
+>>> s.new = "new"
+>>> o
+{'foo': [1, 2, {'bar': 'baz'}]}
+>>> s
+Struct(foo=[1, 2, {'bar': 'baz'}], new='new')
 >>>
 ```
 ### skin
