@@ -134,16 +134,17 @@ Skin(defaultdict(<class 'list'>, {'foo': [1]}))
 # Benchmark
 ``` text
 Create instance:
-        [Box]:   7.018369233002886
-        [Dict]:  7.909402168937959
-        [Skin]:  1.3114022030495107
+  Box            1.3039436460239813
+  Dict           1.4458735270309262
+  Skin           0.22381233097985387
+  tri.struct     0.0160809819935821
 Access exist:
-        [dict]:  0.05416807997971773
-        [Box]:   3.105333382030949
-        [Dict]:  2.140042087994516
-        [Skin]:  7.946239187032916
+  dict           0.010150779969990253
+  Box            0.6168131970334798
+  Dict           0.38859444903209805
+  Skin           1.6113240469712764
 Access non-exist:
-        [Dict]   2.7948554309550673
-        [Skin]   5.142325107008219
+  Dict           0.5559089470189065
+  Skin           1.0153888199711218
 ```
-`Skin` do not wrap object recursively, so it have constant creation time. In case of access `Skin` create wrappers every time, so it is 2-4x times slower, than `Dict` and `Box`.
+`Skin` do not wrap object recursively, so it have constant creation time. In case of access `Skin` create wrappers every time, it is 2x-4x slower, than `Dict` and `Box`.
