@@ -14,8 +14,8 @@ setup(
     url="https://github.com/pohmelie/skin",
     license="Apache 2",
     tests_require=["pytest", "pytest-cov"],
-    include_package_data=True,
-    scripts=["skin.py"],
+    py_modules=["skin"],
+    package_data={"": "readme.md"},
     python_requires=">= 3.4",
     classifiers=[
         "Development Status :: 3 - Alpha",
