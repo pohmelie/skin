@@ -14,6 +14,7 @@ setup(
     url="https://github.com/pohmelie/skin",
     license="Apache 2",
     tests_require=["pytest", "pytest-cov"],
+    include_package_data=True,
     scripts=["skin.py"],
     python_requires=">= 3.4",
     classifiers=[
