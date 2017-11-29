@@ -90,7 +90,7 @@ Example:
 You have original dictionary `{"foo": "bar"}`, and you expect from skin that `Skin({"foo": "bar"}).foo` is `"bar"` string, not skin wrapper. But, `str`, `bytes`, etc. have `__getitiem__` method. That is why there is `allowed` and `forbidden` tuples. I hope defaults are enough for 99% usecases.
 In general: if `value` have no `__getitem__` or not allowed or forbidden you will get `SkinValueError` exception, which skin catches to determine if object can be wrapped.
 
-**Skin class have only one accessible attribute: `value` — original object, which skin wraps**
+**Skin class have only one accessible attribute: `value` — original object, which skin wraps** :tada:
 
 Skin supports both "item" and "attribute" notations:
 ``` python
