@@ -1,8 +1,9 @@
 import copy
+import functools
 
 
 __all__ = ("Skin",)
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 version = tuple(map(int, __version__.split(".")))
 
 
@@ -10,26 +11,47 @@ class SkinValueError(ValueError):
     pass
 
 
+DEFAULT_VALUE = object()
 ANY = object()
 FORBIDDEN = (str, bytes, bytearray, memoryview, range)
-DEFAULT_VALUE = object()
+TRANSPARENT_ATTRIBUTES = {"value", "__class__", "__deepcopy__"}
+
+
+def _wrapper_or_value(self, value=DEFAULT_VALUE, *, parent=None, parent_name=None):
+    try:
+        cls = self.__class__
+        getter = super(cls, self).__getattribute__
+        return cls(value, allowed=getter("allowed"), forbidden=getter("forbidden"),
+                   _parent=parent, _parent_name=parent_name)
+    except SkinValueError:
+        return value
 
 
 class Skin:
 
-    def __init__(self, value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN, parent=None):
+    def __init__(self, value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN, _parent=None, _parent_name=None):
         if value is DEFAULT_VALUE:
             value = {}
-        if not hasattr(value, "__getitem__"):
-            raise SkinValueError("{!r} have no '__getitem__' method".format(value))
-        if allowed is not ANY and not isinstance(value, allowed):
-            raise SkinValueError("{!r} not in allowed".format(value))
-        if forbidden is ANY or isinstance(value, forbidden):
-            raise SkinValueError("{!r} in forbidden".format(value))
         if isinstance(value, self.__class__):
             value = value.value
-        super().__setattr__("value", value)
-        super().__setattr__("_skin_config", dict(parent=parent, allowed=allowed, forbidden=forbidden))
+        else:
+            if not hasattr(value, "__getitem__"):
+                raise SkinValueError("{!r} have no '__getitem__' method".format(value))
+            if allowed is not ANY and not isinstance(value, allowed):
+                raise SkinValueError("{!r} not in allowed".format(value))
+            if forbidden is ANY or isinstance(value, forbidden):
+                raise SkinValueError("{!r} in forbidden".format(value))
+        setter = super().__setattr__
+        setter("value", value)
+        setter("allowed", allowed)
+        setter("forbidden", forbidden)
+        setter("parent", _parent)
+        setter("parent_name", _parent_name)
+
+    def __getattribute__(self, name):
+        if name not in TRANSPARENT_ATTRIBUTES:
+            raise AttributeError
+        return super().__getattribute__(name)
 
     def __getattr__(self, name):
         if hasattr(self.value, name):
@@ -38,13 +60,9 @@ class Skin:
 
     def __getitem__(self, name):
         try:
-            return self.__class__(self.value[name])
-        except SkinValueError:
-            return self.value[name]
+            return _wrapper_or_value(self, self.value[name])
         except (KeyError, IndexError):
-            config = self._skin_config.copy()
-            config["parent"] = (self, name)
-            return self.__class__({}, **config)
+            return _wrapper_or_value(self, parent=self, parent_name=name)
 
     def __setattr__(self, name, value):
         if hasattr(self.value, name):
@@ -54,9 +72,10 @@ class Skin:
 
     def __setitem__(self, name, value):
         self.value[name] = value
-        if self._skin_config["parent"] is not None:
-            skin, parent_name = self._skin_config["parent"]
-            skin[parent_name] = self.value
+        getter = super().__getattribute__
+        parent = getter("parent")
+        if parent is not None:
+            parent[getter("parent_name")] = self.value
 
     def __delattr__(self, name):
         if hasattr(self.value, name):
@@ -74,10 +93,10 @@ class Skin:
         return len(self.value)
 
     def __iter__(self):
-        return iter(self.value)
+        yield from map(functools.partial(_wrapper_or_value, self), self.value)
 
     def __reversed__(self):
-        return reversed(self.value)
+        yield from map(functools.partial(_wrapper_or_value, self), reversed(self.value))
 
     def __contains__(self, item):
         return item in self.value

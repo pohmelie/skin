@@ -138,8 +138,12 @@ def test_repr():
 
 
 def test_reversed(d, s):
-    for i, v in enumerate(reversed(s.b)):
-        assert v is d["b"][-1 - i]
+    ls = list(reversed(s.b))[::-1]
+    assert d["b"][:2] == ls[:2]
+    assert d["b"][2] != ls[2]
+    assert isinstance(ls[2], Skin)
+    assert d["b"][2] == ls[2].value
+    assert ls[2].a == 1
 
 
 def test_defaultdict():
@@ -169,3 +173,18 @@ def test_deepcopy():
     s.foo = []
     t = copy.deepcopy(s)
     assert s.foo.value is not t.foo.value
+
+
+def test_iteration(d, s):
+    ls = list(s.b)
+    assert d["b"][:2] == ls[:2]
+    assert d["b"][2] != ls[2]
+    assert isinstance(ls[2], Skin)
+    assert d["b"][2] == ls[2].value
+    assert ls[2].a == 1
+
+
+def test_config_inheritance():
+    s1 = Skin(forbidden=(set,))
+    s2 = s1.foo.bar.baz
+    assert super(Skin, s1).__getattribute__("forbidden") is super(Skin, s2).__getattribute__("forbidden")

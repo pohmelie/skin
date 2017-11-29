@@ -90,9 +90,7 @@ Example:
 You have original dictionary `{"foo": "bar"}`, and you expect from skin that `Skin({"foo": "bar"}).foo` is `"bar"` string, not skin wrapper. But, `str`, `bytes`, etc. have `__getitiem__` method. That is why there is `allowed` and `forbidden` tuples. I hope defaults are enough for 99% usecases.
 In general: if `value` have no `__getitem__` or not allowed or forbidden you will get `SkinValueError` exception, which skin catches to determine if object can be wrapped.
 
-Skin class have two hardcoded attributes:
-* `value` — original object, which skin wraps
-* `_skin_config` — some skin internals
+**Skin class have only one accessible attribute: `value` — original object, which skin wraps**
 
 Skin supports both "item" and "attribute" notations:
 ``` python
@@ -110,6 +108,8 @@ False
 True
 >>>
 ```
+Both objects `s.foo` and `s["foo"]` is instances of `Skin`, but since they are created dynamicaly they are not the same object.
+
 Skin use strict order to find "items":
 * in case of attribute access:
     * skin attribute
@@ -148,20 +148,20 @@ Skin(defaultdict(<class 'list'>, {'foo': [1]}))
 >>>
 ```
 
-# Benchmark
+# Benchmark (v0.0.5)
 ``` text
 Create instance:
-  Box            1.3039436460239813
-  Dict           1.4458735270309262
-  Skin           0.22381233097985387
-  tri.struct     0.0160809819935821
+  Box            0.7227337849326432
+  Dict           0.8247780610108748
+  Skin           0.14907896996010095
+  tri.struct     0.014445346896536648
 Access exist:
-  dict           0.010150779969990253
-  Box            0.6168131970334798
-  Dict           0.38859444903209805
-  Skin           1.6113240469712764
+  dict           0.005448702024295926
+  Box            0.32549735193606466
+  Dict           0.21359142300207168
+  Skin           1.5485703510930762
 Access non-exist:
-  Dict           0.5559089470189065
-  Skin           1.0153888199711218
+  Dict           0.2847607780713588
+  Skin           1.007843557978049
 ```
-`Skin` do not wrap object recursively, so it have constant creation time. In case of access `Skin` create wrappers every time, it is 2x-4x slower, than `Dict` and `Box`.
+`Skin` do not wrap objects recursively, so it have constant creation time. In case of access, `Skin` create wrappers every time. That is why it is 3x-8x slower, than `Dict` and `Box`.
