@@ -88,7 +88,7 @@ And much more, since some of them are python 2 only.
 |`defaultdict` as original|1.0x|-|-|-|-|-|-|
 |Non-dict as original|1.9x|-|-|-|-|-|1.0x|
 
-`Skin` do not wrap objects recursively, so it have constant creation time. In case of access, `Skin` create wrappers every time. That is why it is 3x-8x slower, than `Dict` and `Box`.
+`items` and `values` support mean that values of iteration will be wrapped too.
 
 # Documentation
 ``` python
