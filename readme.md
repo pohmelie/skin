@@ -70,23 +70,23 @@ And much more, since some of them are python 2 only.
 
 # Benchmark (v0.0.5)
 
-||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|Struct (tri.struct)|
-|---|---|---|---|---|---|---|---|---|
-|Create from `dict`|5.6x|37.6x|46.8x|39.2x|19.6x|47.4x|4.7x|1.0x|
-|Create from key-word arguments|-|11.8x|6.4x|9.0x|18.3x|11.1x|-|1.0x|
-|Get exist element|48.7x|7.9x|7.3x|6.9x|140.8x|1.0x|25.6x|-|
-|Get non-exist element|2.4x|1.0x|1.4x|1.2x|-|-|1.3x|-|
-|Set exist element|14.8x|3.2x|2.3x|2.6x|47.6x|1.0x|-|-|
-|Set non-exist element|2.3x|1.3x|1.1x|1.0x|-|-|-|-|
-|Support `items` iteration|-|3.1x|3.8x|2.8x|42.9x|1.0x|-|-|
-|Support `values` iteration|-|3.5x|3.7x|3.5x|51.7x|1.0x|-|-|
-|Support `len`|19.7x|4.9x|4.4x|4.3x|83.6x|1.0x|-|-|
-|Support `copy`|5.2x|3.0x|-|-|-|-|-|1.0x|
-|Support `deepcopy`|2.7x|1.2x|1.0x|-|3.9x|1.7x|-|1.1x|
-|Wrapped modification affect original|1.0x|-|-|-|-|-|-|-|
-|Original modification affect wrapped|1.9x|-|-|-|-|-|1.0x|-|
-|`defaultdict` as original|1.0x|-|-|-|-|-|-|-|
-|Non-dict as original|1.8x|-|-|-|-|-|1.0x|-|
+||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|
+|---|---|---|---|---|---|---|---|
+|Create from `dict`|1.1x|9.3x|11.1x|9.2x|4.7x|11.2x|1.0x|
+|Create from key-word arguments|-|1.8x|1.0x|1.5x|2.6x|1.9x|-|
+|Get exist element|48.6x|7.9x|7.3x|6.8x|136.6x|1.0x|25.4x|
+|Get non-exist element|2.5x|1.0x|1.4x|1.2x|-|-|1.3x|
+|Set exist element|14.2x|2.9x|2.2x|2.6x|43.8x|1.0x|-|
+|Set non-exist element|2.4x|1.4x|1.1x|1.0x|-|-|-|
+|Support `items` iteration|-|3.0x|3.7x|2.7x|42.1x|1.0x|-|
+|Support `values` iteration|-|3.8x|3.8x|3.1x|50.6x|1.0x|-|
+|Support `len`|19.7x|4.7x|4.2x|4.2x|83.3x|1.0x|-|
+|Support `copy`|1.8x|1.0x|-|-|-|-|-|
+|Support `deepcopy`|2.7x|1.1x|1.0x|-|4.1x|1.7x|-|
+|Wrapped modification affect original|1.0x|-|-|-|-|-|-|
+|Original modification affect wrapped|2.0x|-|-|-|-|-|1.0x|
+|`defaultdict` as original|1.0x|-|-|-|-|-|-|
+|Non-dict as original|1.9x|-|-|-|-|-|1.0x|
 
 `Skin` do not wrap objects recursively, so it have constant creation time. In case of access, `Skin` create wrappers every time. That is why it is 3x-8x slower, than `Dict` and `Box`.
 

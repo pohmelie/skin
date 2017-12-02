@@ -15,12 +15,12 @@ def generate_available_wrappers():
 WRAPPER_NAMES = (
     ("Box", "box"),
     ("Dict", "addict"),
-    ("Struct", "tri.struct"),
     ("DotMap", "dotmap"),
     ("DotAccessDict", "ddict"),
     ("EasyDict", "easydict"),
     ("Dot", "dot_access"),
     ("Skin", "skin"),
+    # ("Struct", "tri.struct"),
 )
 WRAPPERS = tuple(generate_available_wrappers())
 COUNT = 10 ** 4
