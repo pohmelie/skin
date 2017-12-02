@@ -6,7 +6,7 @@
 Getitem-objects «skin» for attribute-like access.
 
 ## Reason
-[addict](https://github.com/mewwts/addict), [python-box](https://github.com/cdgriffith/Box) and [tri.struct](https://github.com/TriOptima/tri.struct) do not respect `dict` reference transparency.
+[addict](https://github.com/mewwts/addict), [python-box](https://github.com/cdgriffith/Box), [tri.struct](https://github.com/TriOptima/tri.struct), [dotmap](https://github.com/drgrib/dotmap), [ddict](https://github.com/rbehzadan/ddict), [easydict](https://github.com/makinacorpus/easydict) do not respect `dict` reference transparency.
 ### addict
 ``` python
 >>> from addict import Dict
@@ -39,23 +39,6 @@ Getitem-objects «skin» for attribute-like access.
 <BoxList: [1, 2, 3, 4]>
 >>>
 ```
-### tri.struct
-``` python
->>> from tri.struct import Struct
->>> o = {"foo": [1, 2, {"bar": "baz"}]}
->>> s = Struct(o)
->>> s.foo[-1].bar
-Traceback (most recent call last):
-File "<input>", line 1, in <module>
-    s.foo[-1].bar
-AttributeError: 'dict' object has no attribute 'bar'
->>> s.new = "new"
->>> o
-{'foo': [1, 2, {'bar': 'baz'}]}
->>> s
-Struct(foo=[1, 2, {'bar': 'baz'}], new='new')
->>>
-```
 ### skin
 ``` python
 >>> from skin import Skin
@@ -74,6 +57,38 @@ True
 {'foo': [1, 2, 3, 4]}
 >>>
 ```
+# Similar projects
+* [addict](https://github.com/mewwts/addict)
+* [python-box](https://github.com/cdgriffith/Box)
+* [tri.struct](https://github.com/TriOptima/tri.struct)
+* [dotmap](https://github.com/drgrib/dotmap)
+* [ddict](https://github.com/rbehzadan/ddict)
+* [easydict](https://github.com/makinacorpus/easydict)
+* [dot_access](https://github.com/kootenpv/dot_access)
+
+And much more, since some of them are python 2 only.
+
+# Benchmark (v0.0.5)
+||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|Struct (tri.struct)|
+|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Create from `dict`|4.7x|37.4x|46.9x|38.2x|19.3x|45.2x|4.2x|1.0x|
+|Create from key-word arguments|-|11.0x|6.5x|9.3x|16.3x|11.4x|-|1.0x|
+|Get exist element|54.4x|9.0x|8.1x|7.8x|151.3x|1.0x|28.3x|-|
+|Get non-exist element|2.4x|1.0x|1.5x|1.3x|-|-|1.3x|-|
+|Set exist element|14.9x|3.1x|2.4x|2.7x|47.8x|1.0x|-|-|
+|Set non-exist element|2.3x|1.2x|1.0x|1.0x|-|-|-|-|
+|Support `items` iteration|-|3.2x|3.9x|2.9x|42.9x|1.0x|-|-|
+|Support `values` iteration|-|4.1x|4.0x|3.6x|58.9x|1.0x|-|-|
+|Support `len`|20.8x|5.0x|4.4x|4.5x|84.2x|1.0x|-|-|
+|Support `copy`|5.3x|3.0x|-|-|-|-|-|1.0x|
+|Support `deepcopy`|2.7x|1.2x|1.0x|-|3.9x|1.7x|-|1.0x|
+|Wrapped modification affect original|1.0x|-|-|-|-|-|-|-|
+|Original modification affect wrapped|1.9x|-|-|-|-|-|1.0x|-|
+|`defaultdict` as original|1.0x|-|-|-|-|-|-|-|
+|Non-dict as original|1.8x|-|-|-|-|-|1.0x|-|
+
+`Skin` do not wrap objects recursively, so it have constant creation time. In case of access, `Skin` create wrappers every time. That is why it is 3x-8x slower, than `Dict` and `Box`.
+
 # Documentation
 ``` python
 Skin(value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN)
@@ -164,4 +179,3 @@ Access non-exist:
   Dict           0.2847607780713588
   Skin           1.007843557978049
 ```
-`Skin` do not wrap objects recursively, so it have constant creation time. In case of access, `Skin` create wrappers every time. That is why it is 3x-8x slower, than `Dict` and `Box`.
