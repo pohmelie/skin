@@ -214,7 +214,7 @@ print("Markdown table:")
 module_by_name = dict(WRAPPER_NAMES)
 row = ["{} ({})".format(name, module_by_name[name]) for name in head]
 print("|".join(["", ""] + row + [""]))
-print("|-" * len(BENCHMAKRS) + "|")
+print("|---" * len(BENCHMAKRS) + "|")
 for (title, _), row in zip(BENCHMAKRS, rows):
     values = []
     fastest = min(v for v in row if isinstance(v, float))

@@ -70,18 +70,18 @@ And much more, since some of them are python 2 only.
 
 # Benchmark (v0.0.5)
 ||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|Struct (tri.struct)|
-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
-|Create from `dict`|4.7x|37.4x|46.9x|38.2x|19.3x|45.2x|4.2x|1.0x|
-|Create from key-word arguments|-|11.0x|6.5x|9.3x|16.3x|11.4x|-|1.0x|
-|Get exist element|54.4x|9.0x|8.1x|7.8x|151.3x|1.0x|28.3x|-|
-|Get non-exist element|2.4x|1.0x|1.5x|1.3x|-|-|1.3x|-|
-|Set exist element|14.9x|3.1x|2.4x|2.7x|47.8x|1.0x|-|-|
-|Set non-exist element|2.3x|1.2x|1.0x|1.0x|-|-|-|-|
-|Support `items` iteration|-|3.2x|3.9x|2.9x|42.9x|1.0x|-|-|
-|Support `values` iteration|-|4.1x|4.0x|3.6x|58.9x|1.0x|-|-|
-|Support `len`|20.8x|5.0x|4.4x|4.5x|84.2x|1.0x|-|-|
-|Support `copy`|5.3x|3.0x|-|-|-|-|-|1.0x|
-|Support `deepcopy`|2.7x|1.2x|1.0x|-|3.9x|1.7x|-|1.0x|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|Create from `dict`|4.7x|37.7x|46.8x|36.9x|19.8x|45.2x|4.1x|1.0x|
+|Create from key-word arguments|-|11.4x|6.6x|10.1x|17.4x|13.0x|-|1.0x|
+|Get exist element|53.4x|8.8x|8.0x|7.7x|157.2x|1.0x|27.9x|-|
+|Get non-exist element|2.5x|1.0x|1.5x|1.2x|-|-|1.3x|-|
+|Set exist element|15.2x|3.1x|2.3x|2.7x|48.5x|1.0x|-|-|
+|Set non-exist element|2.3x|1.4x|1.1x|1.0x|-|-|-|-|
+|Support `items` iteration|-|3.2x|4.1x|2.9x|44.3x|1.0x|-|-|
+|Support `values` iteration|-|3.9x|4.1x|3.4x|58.5x|1.0x|-|-|
+|Support `len`|19.1x|4.6x|4.0x|4.0x|79.8x|1.0x|-|-|
+|Support `copy`|5.0x|3.0x|-|-|-|-|-|1.0x|
+|Support `deepcopy`|2.7x|1.2x|1.0x|-|4.0x|1.7x|-|1.0x|
 |Wrapped modification affect original|1.0x|-|-|-|-|-|-|-|
 |Original modification affect wrapped|1.9x|-|-|-|-|-|1.0x|-|
 |`defaultdict` as original|1.0x|-|-|-|-|-|-|-|
