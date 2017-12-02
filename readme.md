@@ -68,7 +68,7 @@ True
 
 And much more, since some of them are python 2 only.
 
-# Benchmark (v0.0.5)
+# Benchmark
 
 ||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|
 |---|---|---|---|---|---|---|---|
