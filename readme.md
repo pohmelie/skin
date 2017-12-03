@@ -71,7 +71,7 @@ And much more, since some of them are python 2 only.
 # Benchmark
 
 ||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|
-|---|---|---|---|---|---|---|---|
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |Create from `dict`|1.1x|9.3x|11.1x|9.2x|4.7x|11.2x|1.0x|
 |Create from key-word arguments|-|1.8x|1.0x|1.5x|2.6x|1.9x|-|
 |Get exist element|48.6x|7.9x|7.3x|6.8x|136.6x|1.0x|25.4x|
