@@ -163,20 +163,3 @@ Since skin is just wrapper, which do not recreate container you can use any obje
 Skin(defaultdict(<class 'list'>, {'foo': [1]}))
 >>>
 ```
-
-# Benchmark (v0.0.5)
-``` text
-Create instance:
-  Box            0.7227337849326432
-  Dict           0.8247780610108748
-  Skin           0.14907896996010095
-  tri.struct     0.014445346896536648
-Access exist:
-  dict           0.005448702024295926
-  Box            0.32549735193606466
-  Dict           0.21359142300207168
-  Skin           1.5485703510930762
-Access non-exist:
-  Dict           0.2847607780713588
-  Skin           1.007843557978049
-```
