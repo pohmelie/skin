@@ -1,5 +1,6 @@
 import collections
 import copy
+import pickle
 
 import pytest
 
@@ -188,3 +189,8 @@ def test_config_inheritance():
     s1 = Skin(forbidden=(set,))
     s2 = s1.foo.bar.baz
     assert super(Skin, s1).__getattribute__("forbidden") is super(Skin, s2).__getattribute__("forbidden")
+
+
+def test_pickle(s):
+    x = pickle.loads(pickle.dumps(s))
+    assert x.value == s.value

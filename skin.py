@@ -3,7 +3,7 @@ import functools
 
 
 __all__ = ("Skin",)
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 version = tuple(map(int, __version__.split(".")))
 
 
@@ -14,7 +14,6 @@ class SkinValueError(ValueError):
 DEFAULT_VALUE = object()
 ANY = object()
 FORBIDDEN = (str, bytes, bytearray, memoryview, range)
-TRANSPARENT_ATTRIBUTES = {"value", "__class__", "__deepcopy__"}
 
 
 def _wrapper_or_value(self, value=DEFAULT_VALUE, *, parent=None, parent_name=None):
@@ -25,6 +24,10 @@ def _wrapper_or_value(self, value=DEFAULT_VALUE, *, parent=None, parent_name=Non
                    _parent=parent, _parent_name=parent_name)
     except SkinValueError:
         return value
+
+
+def _special_method(name):
+    return name.startswith("__") and name.endswith("__") or name == "value"
 
 
 class Skin:
@@ -49,11 +52,13 @@ class Skin:
         setter("parent_name", _parent_name)
 
     def __getattribute__(self, name):
-        if name not in TRANSPARENT_ATTRIBUTES:
-            raise AttributeError
+        if _special_method(name):
+            return super().__getattribute__(name)
         return super().__getattribute__(name)
 
     def __getattr__(self, name):
+        if _special_method(name):
+            raise AttributeError
         if hasattr(self.value, name):
             return getattr(self.value, name)
         return self[name]
