@@ -12,7 +12,6 @@ class SkinValueError(ValueError):
 
 
 DEFAULT_VALUE = object()
-ANY = object()
 FORBIDDEN = (str, bytes, bytearray, memoryview, range)
 
 
@@ -32,7 +31,7 @@ def _special_method(name):
 
 class Skin:
 
-    def __init__(self, value=DEFAULT_VALUE, *, allowed=ANY, forbidden=FORBIDDEN, _parent=None, _parent_name=None):
+    def __init__(self, value=DEFAULT_VALUE, *, allowed="ANY", forbidden=FORBIDDEN, _parent=None, _parent_name=None):
         if value is DEFAULT_VALUE:
             value = {}
         if isinstance(value, self.__class__):
@@ -40,9 +39,9 @@ class Skin:
         else:
             if not hasattr(value, "__getitem__"):
                 raise SkinValueError("{!r} have no '__getitem__' method".format(value))
-            if allowed is not ANY and not isinstance(value, allowed):
+            if allowed != "ANY" and not isinstance(value, allowed):
                 raise SkinValueError("{!r} not in allowed".format(value))
-            if forbidden is ANY or isinstance(value, forbidden):
+            if forbidden == "ANY" or isinstance(value, forbidden):
                 raise SkinValueError("{!r} in forbidden".format(value))
         setter = super().__setattr__
         setter("value", value)
