@@ -70,23 +70,27 @@ And much more, since some of them are python 2 only.
 
 # Benchmark
 
-||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|Create from `dict`|1.1x|9.3x|11.1x|9.2x|4.7x|11.2x|1.0x|
-|Create from key-word arguments|-|1.8x|1.0x|1.5x|2.6x|1.9x|-|
-|Get exist element|48.6x|7.9x|7.3x|6.8x|136.6x|1.0x|25.4x|
-|Get non-exist element|2.5x|1.0x|1.4x|1.2x|-|-|1.3x|
-|Set exist element|14.2x|2.9x|2.2x|2.6x|43.8x|1.0x|-|
-|Set non-exist element|2.4x|1.4x|1.1x|1.0x|-|-|-|
-|Support `items` iteration|-|3.0x|3.7x|2.7x|42.1x|1.0x|-|
-|Support `values` iteration|-|3.8x|3.8x|3.1x|50.6x|1.0x|-|
-|Support `len`|19.7x|4.7x|4.2x|4.2x|83.3x|1.0x|-|
-|Support `copy`|1.8x|1.0x|-|-|-|-|-|
-|Support `deepcopy`|2.7x|1.1x|1.0x|-|4.1x|1.7x|-|
-|Wrapped modification affect original|1.0x|-|-|-|-|-|-|
-|Original modification affect wrapped|2.0x|-|-|-|-|-|1.0x|
-|`defaultdict` as original|1.0x|-|-|-|-|-|-|
-|Non-dict as original|1.9x|-|-|-|-|-|1.0x|
+||Skin (skin)|Dict (addict)|DotMap (dotmap)|DotAccessDict (ddict)|Box (box)|EasyDict (easydict)|Dot (dot_access)|dict (builtins)|
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Create from `dict`|4.0x|37.0x|45.5x|37.1x|19.0x|44.6x|4.2x|1.0x|
+|Create from key-word arguments|-|11.1x|6.4x|9.4x|16.3x|11.7x|-|1.0x|
+|Get exist element (attribute access)|33.6x|7.7x|7.1x|6.5x|132.4x|1.0x|25.4x|-|
+|Get exist element (item access)|31.1x|5.5x|3.7x|2.0x|154.1x|2.1x|26.8x|1.0x|
+|Get non-exist element (attribute access)|1.8x|1.0x|1.4x|1.2x|-|-|1.3x|-|
+|Get non-exist element (item access)|1.6x|1.0x|1.4x|-|-|-|1.2x|-|
+|Set exist element (attribute access)|10.6x|3.0x|2.3x|2.5x|47.7x|1.0x|-|-|
+|Set exist element (item access)|29.0x|6.7x|3.9x|4.2x|164.6x|4.6x|-|1.0x|
+|Set non-exist element (attribute access)|1.6x|1.3x|1.0x|1.0x|-|-|-|-|
+|Set non-exist element (item access)|1.5x|1.3x|1.0x|-|-|-|-|-|
+|Support `items` iteration|-|2.9x|3.8x|2.7x|40.5x|1.0x|-|-|
+|Support `values` iteration|-|3.9x|4.2x|3.6x|59.3x|1.0x|-|-|
+|Support `len`|13.9x|4.7x|4.3x|4.1x|80.5x|1.0x|-|-|
+|Support `copy`|1.3x|1.0x|-|-|-|-|-|-|
+|Support `deepcopy`|2.1x|1.1x|1.0x|-|3.8x|1.6x|-|-|
+|Wrapped modification affect original|1.0x|-|-|-|-|-|-|-|
+|Original modification affect wrapped|1.3x|-|-|-|-|-|1.0x|-|
+|`defaultdict` as original|1.0x|-|-|-|-|-|-|-|
+|Non-dict as original|1.3x|-|-|-|-|-|1.0x|-|
 
 `items` and `values` support mean that values of iteration will be wrapped too.
 
@@ -103,7 +107,7 @@ What is `allowed` and `forbidden`?
 Since skin target is not to recreate containers there should be a rule to determine is object container or endpoint-node. Some objects (listed above as `forbidden`) have `__getitem__` method, but wont act like containers.
 
 Example:
-You have original dictionary `{"foo": "bar"}`, and you expect from skin that `Skin({"foo": "bar"}).foo` is `"bar"` string, not skin wrapper. But, `str`, `bytes`, etc. have `__getitiem__` method. That is why there is `allowed` and `forbidden` tuples. I hope defaults are enough for 99% usecases.
+You have original dictionary `{"foo": "bar"}`, and you expect from skin that `Skin({"foo": "bar"}).foo` is `"bar"` string, not skin wrapper. But, `str`, `bytes`, etc. have `__getitiem__` method. That is why there is `allowed` and `forbidden` tuples. I hope defaults are good enough for 99% usecases.
 In general: if `value` have no `__getitem__` or not allowed or forbidden you will get `SkinValueError` exception, which skin catches to determine if object can be wrapped.
 
 **Skin class have only one accessible attribute: `value` — original object, which skin wraps** :tada:
