@@ -20,6 +20,7 @@ WRAPPER_NAMES = (
     ("EasyDict", "easydict"),
     ("Dot", "dot_access"),
     ("Skin", "skin"),
+    ("dict", "builtins"),
     # ("Struct", "tri.struct"),
 )
 WRAPPERS = tuple(generate_available_wrappers())
@@ -68,21 +69,35 @@ def create_from_kwargs(original, wrapper):
     return timer.t
 
 
-def get_exist_element(original, wrapper):
+def get_exist_element_attribute_access(original, wrapper):
     w = wrapper(original)
     with Timer() as timer:
         assert w.foo.bar[-1].foo.bar[2].baz == "value", "Wrong node value"
     return timer.t
 
 
-def get_non_exist_element(original, wrapper):
+def get_exist_element_item_access(original, wrapper):
+    w = wrapper(original)
+    with Timer() as timer:
+        assert w["foo"]["bar"][-1]["foo"]["bar"][2]["baz"] == "value", "Wrong node value"
+    return timer.t
+
+
+def get_non_exist_element_attribute_access(original, wrapper):
     w = wrapper(original)
     with Timer() as timer:
         w.one.two.three
     return timer.t
 
 
-def set_exist_element(original, wrapper):
+def get_non_exist_element_item_access(original, wrapper):
+    w = wrapper(original)
+    with Timer() as timer:
+        w["one"]["two"]["three"]
+    return timer.t
+
+
+def set_exist_element_attribute_access(original, wrapper):
     w = wrapper(original)
     with Timer() as timer:
         w.foo.bar[-1].foo.bar[2].baz = 1
@@ -90,11 +105,27 @@ def set_exist_element(original, wrapper):
     return timer.t
 
 
-def set_non_exist_element(original, wrapper):
+def set_exist_element_item_access(original, wrapper):
+    w = wrapper(original)
+    with Timer() as timer:
+        w["foo"]["bar"][-1]["foo"]["bar"][2]["baz"] = 1
+    assert w["foo"]["bar"][-1]["foo"]["bar"][2]["baz"] == 1, "Wrong node value"
+    return timer.t
+
+
+def set_non_exist_element_attribute_access(original, wrapper):
     w = wrapper(original)
     with Timer() as timer:
         w.one.two.three = 1
     assert w.one.two.three == 1, "Wrong node value"
+    return timer.t
+
+
+def set_non_exist_element_item_access(original, wrapper):
+    w = wrapper(original)
+    with Timer() as timer:
+        w["one"]["two"]["three"] = 1
+    assert w["one"]["two"]["three"] == 1, "Wrong node value"
     return timer.t
 
 
@@ -177,10 +208,14 @@ def non_dict_as_original(original, wrapper):
 BENCHMAKRS = (
     ("Create from `dict`", create_from_dict),
     ("Create from key-word arguments", create_from_kwargs),
-    ("Get exist element", get_exist_element),
-    ("Get non-exist element", get_non_exist_element),
-    ("Set exist element", set_exist_element),
-    ("Set non-exist element", set_non_exist_element),
+    ("Get exist element (attribute access)", get_exist_element_attribute_access),
+    ("Get exist element (item access)", get_exist_element_item_access),
+    ("Get non-exist element (attribute access)", get_non_exist_element_attribute_access),
+    ("Get non-exist element (item access)", get_non_exist_element_item_access),
+    ("Set exist element (attribute access)", set_exist_element_attribute_access),
+    ("Set exist element (item access)", set_exist_element_item_access),
+    ("Set non-exist element (attribute access)", set_non_exist_element_attribute_access),
+    ("Set non-exist element (item access)", set_non_exist_element_item_access),
     ("Support `items` iteration", support_items_iteration),
     ("Support `values` iteration", support_values_iteration),
     ("Support `len`", support_len),
@@ -204,7 +239,7 @@ for title, bench in BENCHMAKRS:
             result = "[+] {:.3f}".format(total)
         except Exception as e:
             total = "-"
-            result = "[-] {}".format(e)
+            result = "[-] {!r}".format(e)
         table[wrapper.__name__].append(total)
         print("  {:<15}{}".format(wrapper.__name__, result))
 columns = sorted(table.items(), key=lambda p: sum(isinstance(t, float) for t in p[1]), reverse=True)
