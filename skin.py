@@ -110,3 +110,6 @@ class Skin:
 
     def __deepcopy__(self, memo):
         return Skin(copy.deepcopy(self.value, memo))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.value == other.value
