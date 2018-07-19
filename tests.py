@@ -194,3 +194,12 @@ def test_config_inheritance():
 def test_pickle(s):
     x = pickle.loads(pickle.dumps(s))
     assert x.value == s.value
+
+
+def test_equality(s, d):
+    s2 = Skin(d)
+    assert s is not s2
+    assert s == s2
+    assert s != d
+    assert s.value is s2.value
+    assert s2.value is d
