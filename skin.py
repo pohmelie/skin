@@ -25,10 +25,6 @@ def _wrapper_or_value(self, value=DEFAULT_VALUE, *, parent=None, parent_name=Non
         return value
 
 
-def _special_method(name):
-    return name.startswith("__") and name.endswith("__") or name == "value"
-
-
 class Skin:
 
     def __init__(self, value=DEFAULT_VALUE, *, allowed="ANY", forbidden=FORBIDDEN, _parent=None, _parent_name=None):
@@ -50,13 +46,8 @@ class Skin:
         setter("parent", _parent)
         setter("parent_name", _parent_name)
 
-    def __getattribute__(self, name):
-        if _special_method(name):
-            return super().__getattribute__(name)
-        return super().__getattribute__(name)
-
     def __getattr__(self, name):
-        if _special_method(name):
+        if name.startswith("__") and name.endswith("__") or name == "value":
             raise AttributeError
         if hasattr(self.value, name):
             return getattr(self.value, name)
